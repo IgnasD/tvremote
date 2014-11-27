@@ -1,0 +1,4 @@
+Very minimalistic IPTV omxplayer frontend for RPi. Uses LIRC for input.
+
+TODO:
+m3u parsing (channels currently must be hardcoded)
