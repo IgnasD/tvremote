@@ -9,6 +9,8 @@
 #include <errno.h>
 #include <time.h>
 
+#include "m3uparser.h"
+
 pid_t current_player = 0;
 int pipefd[2];
 
@@ -62,11 +64,18 @@ void next_audio(void) {
 }
 
 int main(int argc, char *argv[]) {
-    int channels = 3, c = 0;
-    const char *url[channels];
-    url[0] = "http://chan1/";
-    url[1] = "http://chan2/";
-    url[2] = "http://chan3/";
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s playlist.m3u\n", argv[0]);
+        return 1;
+    }
+    
+    int channels, c = 0;
+    char **url = NULL;
+    
+    if (!parse_m3u(argv[1], &url, &channels)) {
+        fprintf(stderr, "Couldn't parse playlist.\n");
+        return 1;
+    }
     
     time_t temp_time, last_chan_change = 0, last_audio_change = 0;
     
